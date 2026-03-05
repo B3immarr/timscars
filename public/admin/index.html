@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Tim's Car Deals</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231C1C1E' stroke-width='2'><circle cx='12' cy='12' r='3'/><path d='M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F2F2F7;
+    --surface: #FFFFFF;
+    --surface2: #F9F9FB;
+    --border: rgba(0,0,0,0.08);
+    --text: #1C1C1E;
+    --text2: #48484A;
+    --text3: #8E8E93;
+    --accent: #0A84FF;
+    --green: #30D158;
+    --red: #FF453A;
+    --orange: #FF9F0A;
+    --shadow: 0 4px 20px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05);
+    --radius: 18px;
+    --radius-sm: 12px;
+    --sidebar: 260px;
+    --t: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Sora', -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+
+  /* ── Login Screen ── */
+  .login-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(10,132,255,0.06) 0%, transparent 70%), var(--bg);
+    padding: 24px;
+  }
+
+  .login-box {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 48px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+    border: 1px solid var(--border);
+  }
+
+  .login-logo {
+    font-size: 40px;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+
+  .login-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 26px;
+    text-align: center;
+    color: var(--text);
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+  }
+
+  .login-sub {
+    text-align: center;
+    font-size: 14px;
+    color: var(--text3);
+    margin-bottom: 36px;
+  }
+
+  /* ── Main Layout ── */
+  .app { display: flex; min-height: 100vh; }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: var(--sidebar);
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    z-index: 50;
+    transition: transform 0.3s ease;
+  }
+
+  .sidebar-header {
+    padding: 24px 20px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    margin-bottom: 4px;
+  }
+
+  .sidebar-logo-icon {
+    width: 32px; height: 32px;
+    background: var(--text);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+  }
+
+  .sidebar-logo-text {
+    font-family: 'DM Serif Display', serif;
+    font-size: 16px;
+    color: var(--text);
+    letter-spacing: -0.3px;
+    line-height: 1.2;
+  }
+
+  .sidebar-badge {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text3);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: var(--bg);
+    padding: 2px 8px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-top: 4px;
+  }
+
+  .sidebar-nav {
+    padding: 12px;
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .nav-section-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 8px 8px 4px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text2);
+    cursor: pointer;
+    transition: var(--t);
+    margin-bottom: 2px;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    text-decoration: none;
+  }
+
+  .nav-item:hover { background: var(--bg); color: var(--text); }
+  
+  .nav-item.active {
+    background: var(--accent);
+    color: white;
+  }
+
+  .nav-item-icon { font-size: 16px; width: 20px; text-align: center; flex-shrink: 0; }
+
+  .sidebar-footer {
+    padding: 12px;
+    border-top: 1px solid var(--border);
+  }
+
+  .btn-logout {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--red);
+    cursor: pointer;
+    transition: var(--t);
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+  }
+
+  .btn-logout:hover { background: rgba(255,69,58,0.08); }
+
+  /* ── Main Content ── */
+  .main {
+    margin-left: var(--sidebar);
+    flex: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .topbar {
+    background: rgba(242,242,247,0.82);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 40;
+  }
+
+  .page-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    color: var(--text);
+    letter-spacing: -0.5px;
+  }
+
+  .content {
+    padding: 32px;
+    flex: 1;
+    max-width: 1100px;
+  }
+
+  /* ── Stats Cards ── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border-radius: var(--radius-sm);
+    padding: 20px;
+    border: 1px solid var(--border);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  .stat-card-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .stat-card-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px;
+    color: var(--text);
+    letter-spacing: -1px;
+    line-height: 1;
+  }
+
+  /* ── Table ── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    color: var(--text);
+    letter-spacing: -0.5px;
+  }
+
+  .search-small {
+    padding: 8px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    background: var(--surface);
+    outline: none;
+    color: var(--text);
+    width: 200px;
+    transition: var(--t);
+  }
+  .search-small:focus { border-color: var(--accent); }
+
+  .car-table {
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .car-table-row {
+    display: grid;
+    grid-template-columns: 64px 1fr auto auto auto;
+    gap: 16px;
+    align-items: center;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+
+  .car-table-row:last-child { border-bottom: none; }
+
+  .car-table-header {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    background: var(--bg);
+  }
+
+  .car-table-row:not(.car-table-header):hover { background: var(--bg); }
+
+  .table-thumb {
+    width: 56px; height: 40px;
+    border-radius: 8px;
+    object-fit: cover;
+    background: var(--bg);
+    border: 1px solid var(--border);
+  }
+
+  .table-thumb-placeholder {
+    width: 56px; height: 40px;
+    border-radius: 8px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: var(--text3);
+  }
+
+  .table-car-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text);
+  }
+
+  .table-car-meta {
+    font-size: 12px;
+    color: var(--text3);
+    margin-top: 2px;
+  }
+
+  .table-price {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--text);
+    font-family: 'DM Serif Display', serif;
+    white-space: nowrap;
+  }
+
+  .table-actions {
+    display: flex;
+    gap: 6px;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 100px;
+  }
+
+  .pill-green { background: rgba(48,209,88,0.12); color: #1a7a35; }
+  .pill-red { background: rgba(255,69,58,0.12); color: var(--red); }
+  .pill-blue { background: rgba(10,132,255,0.12); color: var(--accent); }
+  .pill-gold { background: rgba(255,214,10,0.2); color: #7a5e00; }
+
+  /* ── Form ── */
+  .form-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .form-section {
+    padding: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .form-section:last-child { border-bottom: none; }
+
+  .form-section-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 20px;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  .form-row.full { grid-template-columns: 1fr; }
+
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+
+  .form-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text2);
+    letter-spacing: 0.02em;
+  }
+
+  .form-input, .form-select, .form-textarea {
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    background: var(--bg);
+    outline: none;
+    transition: var(--t);
+    width: 100%;
+  }
+
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--accent);
+    background: var(--surface);
+  }
+
+  .form-textarea {
+    resize: vertical;
+    min-height: 100px;
+    line-height: 1.6;
+  }
+
+  /* ── Image Upload ── */
+  .image-upload-zone {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-sm);
+    padding: 32px;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--t);
+    background: var(--bg);
+    position: relative;
+  }
+
+  .image-upload-zone:hover, .image-upload-zone.drag {
+    border-color: var(--accent);
+    background: rgba(10,132,255,0.04);
+  }
+
+  .image-upload-zone input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+
+  .upload-icon { font-size: 32px; margin-bottom: 10px; }
+
+  .upload-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text2);
+  }
+
+  .upload-sub {
+    font-size: 12px;
+    color: var(--text3);
+    margin-top: 4px;
+  }
+
+  .image-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .image-preview-item {
+    position: relative;
+    aspect-ratio: 4/3;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid var(--border);
+    background: var(--bg);
+    transition: var(--t);
+  }
+
+  .image-preview-item.primary { border-color: var(--accent); }
+
+  .image-preview-item img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+
+  .image-preview-actions {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    opacity: 0;
+    transition: var(--t);
+  }
+
+  .image-preview-item:hover .image-preview-actions { opacity: 1; }
+
+  .img-action-btn {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    transition: var(--t);
+  }
+
+  .img-action-btn:hover { transform: scale(1.1); }
+
+  .primary-badge {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    background: var(--accent);
+    color: white;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* ── Features Input ── */
+  .features-input-area {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+
+  .feature-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 10px;
+    background: rgba(10,132,255,0.1);
+    color: var(--accent);
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  .feature-chip button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--accent);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .feature-add-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  /* ── Toggles ── */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .toggle-row:last-child { border-bottom: none; }
+
+  .toggle-label { font-size: 14px; font-weight: 500; color: var(--text); }
+  .toggle-desc { font-size: 12px; color: var(--text3); margin-top: 2px; }
+
+  .toggle {
+    width: 48px; height: 28px;
+    background: var(--border);
+    border-radius: 14px;
+    position: relative;
+    cursor: pointer;
+    transition: var(--t);
+    border: none;
+    flex-shrink: 0;
+  }
+
+  .toggle::after {
+    content: '';
+    position: absolute;
+    top: 3px; left: 3px;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: white;
+    transition: var(--t);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  }
+
+  .toggle.on { background: var(--accent); }
+  .toggle.on::after { transform: translateX(20px); }
+
+  /* ── Buttons ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 20px;
+    border-radius: 10px;
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--t);
+    border: none;
+    text-decoration: none;
+  }
+
+  .btn-primary { background: var(--text); color: white; }
+  .btn-primary:hover { background: var(--accent); }
+
+  .btn-danger { background: rgba(255,69,58,0.1); color: var(--red); }
+  .btn-danger:hover { background: var(--red); color: white; }
+
+  .btn-ghost { background: var(--bg); color: var(--text2); border: 1.5px solid var(--border); }
+  .btn-ghost:hover { background: var(--surface); border-color: var(--text3); }
+
+  .btn-sm { padding: 7px 14px; font-size: 12px; border-radius: 8px; }
+
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+
+  /* ── Form Actions ── */
+  .form-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    padding: 20px 28px;
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+
+  /* ── Toast ── */
+  .toast-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .toast {
+    background: var(--text);
+    color: white;
+    padding: 12px 18px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    animation: toastIn 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .toast.success { background: var(--green); color: #001a09; }
+  .toast.error { background: var(--red); }
+
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateY(20px) scale(0.9); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  /* ── Settings ── */
+  .settings-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  /* ── Confirm Modal ── */
+  .confirm-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    padding: 24px;
+  }
+
+  .confirm-overlay.open { opacity: 1; pointer-events: all; }
+
+  .confirm-box {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 32px;
+    max-width: 380px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    transform: scale(0.95);
+    transition: transform 0.2s;
+  }
+
+  .confirm-overlay.open .confirm-box { transform: scale(1); }
+  .confirm-icon { font-size: 40px; margin-bottom: 12px; }
+  .confirm-title { font-family: 'DM Serif Display', serif; font-size: 22px; margin-bottom: 8px; }
+  .confirm-text { font-size: 14px; color: var(--text3); margin-bottom: 24px; }
+  .confirm-actions { display: flex; gap: 10px; justify-content: center; }
+
+  /* ── Mobile ── */
+  @media (max-width: 768px) {
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.mobile-open { transform: none; }
+    .main { margin-left: 0; }
+    .content { padding: 20px; }
+    .car-table-row { grid-template-columns: 1fr auto; }
+    .car-table-row .table-thumb, .car-table-row .table-price, .car-table-header .hide-mobile { display: none; }
+  }
+
+  /* ── Misc ── */
+  .divider { height: 1px; background: var(--border); margin: 20px 0; }
+  .text-muted { color: var(--text3); font-size: 13px; }
+  .gap-row { display: flex; gap: 10px; align-items: center; }
+
+  a { color: inherit; }
+
+  .mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 22px;
+    color: var(--text);
+    padding: 4px;
+  }
+
+  @media (max-width: 768px) {
+    .mobile-menu-btn { display: block; }
+    .form-row { grid-template-columns: 1fr; }
+    .settings-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toasts"></div>
+
+<!-- Confirm Modal -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <div class="confirm-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></div>
+    <div class="confirm-title">Delete this car?</div>
+    <div class="confirm-text">This action cannot be undone. All images will be permanently deleted.</div>
+    <div class="confirm-actions">
+      <button class="btn btn-ghost" onclick="closeConfirm()">Cancel</button>
+      <button class="btn btn-danger" id="confirmOkBtn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- Login Screen -->
+<div id="loginScreen" class="login-screen">
+  <div class="login-box">
+    <div class="login-logo"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+    <div class="login-title">Admin Access</div>
+    <div class="login-sub">Tim's Car Deals — Dashboard</div>
+    <div class="form-group" style="margin-bottom: 14px;">
+      <label class="form-label">Password</label>
+      <input class="form-input" type="password" id="loginPassword" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')login()">
+    </div>
+    <button class="btn btn-primary" style="width:100%; justify-content:center;" onclick="login()">Sign In →</button>
+    <div id="loginError" style="color:var(--red); font-size:13px; text-align:center; margin-top:12px; display:none;">Incorrect password. Try again.</div>
+  </div>
+</div>
+
+<!-- Main App (hidden until auth) -->
+<div id="mainApp" class="app" style="display:none;">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <a href="/" target="_blank" class="sidebar-logo">
+        <div class="sidebar-logo-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1l2-3h10l2 3h1a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-2"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="16.5" cy="17.5" r="2.5"/></svg></div>
+        <div class="sidebar-logo-text">Tim's Car Deals</div>
+      </a>
+      <span class="sidebar-badge">Admin Dashboard</span>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Inventory</div>
+      <button class="nav-item active" id="nav-cars" onclick="showSection('cars')">
+        <span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1l2-3h10l2 3h1a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-2"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="16.5" cy="17.5" r="2.5"/></svg></span> All Cars
+      </button>
+      <button class="nav-item" id="nav-add" onclick="showSection('add')">
+        <span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span> Add New Car
+      </button>
+      <div class="nav-section-label" style="margin-top:12px;">System</div>
+      <button class="nav-item" id="nav-settings" onclick="showSection('settings')">
+        <span class="nav-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span> Settings
+      </button>
+      <a class="nav-item" href="/" target="_blank">
+        <span class="nav-item-icon">↗️</span> View Live Site
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-logout" onclick="logout()">
+        <span>↩</span> Sign Out
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+    <div class="topbar">
+      <div class="gap-row">
+        <button class="mobile-menu-btn" onclick="toggleSidebar()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+        <span class="page-title" id="pageTitle">Inventory</span>
+      </div>
+      <div class="gap-row">
+        <span id="topbarStats" class="text-muted" style="font-size:13px;"></span>
+      </div>
+    </div>
+
+    <div class="content" id="mainContent">
+      <!-- Content rendered here -->
+    </div>
+  </div>
+</div>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────────────
+let cars = [];
+let settings = {};
+let editingCar = null;
+let newImageFiles = [];
+let imagesToDelete = [];
+let features = [];
+let currentSection = 'cars';
+let confirmCallback = null;
+
+// ── Auth ───────────────────────────────────────────────────────────────────────
+async function init() {
+  const res = await fetch('/api/admin/check');
+  const data = await res.json();
+  if (data.authenticated) {
+    showApp();
+  }
+}
+
+async function login() {
+  const pw = document.getElementById('loginPassword').value;
+  const err = document.getElementById('loginError');
+  err.style.display = 'none';
+
+  try {
+    const res = await fetch('/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pw })
+    });
+    if (res.ok) {
+      showApp();
+    } else {
+      err.style.display = 'block';
+    }
+  } catch(e) { err.style.display = 'block'; }
+}
+
+async function logout() {
+  await fetch('/api/admin/logout', { method: 'POST' });
+  location.reload();
+}
+
+function showApp() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('mainApp').style.display = 'flex';
+  loadSettings().then(() => showSection('cars'));
+}
+
+// ── Navigation ─────────────────────────────────────────────────────────────────
+function showSection(section) {
+  currentSection = section;
+  document.querySelectorAll('.nav-item[id^="nav-"]').forEach(el => el.classList.remove('active'));
+  const navEl = document.getElementById('nav-' + section);
+  if (navEl) navEl.classList.add('active');
+
+  const titles = { cars: 'Inventory', add: 'Add New Car', settings: 'Settings' };
+  document.getElementById('pageTitle').textContent = titles[section] || '';
+
+  if (section === 'cars') renderCarsList();
+  else if (section === 'add') renderCarForm(null);
+  else if (section === 'settings') renderSettings();
+
+  // Close mobile sidebar
+  document.getElementById('sidebar').classList.remove('mobile-open');
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('mobile-open');
+}
+
+// ── Data Loading ───────────────────────────────────────────────────────────────
+async function loadCars() {
+  const res = await fetch('/api/admin/cars');
+  cars = await res.json();
+  return cars;
+}
+
+async function loadSettings() {
+  const res = await fetch('/api/admin/settings').catch(() => null);
+  if (res && res.ok) settings = await res.json();
+  return settings;
+}
+
+async function loadStats() {
+  const res = await fetch('/api/admin/stats').catch(() => null);
+  if (!res || !res.ok) return;
+  const s = await res.json();
+  document.getElementById('topbarStats').textContent = `${s.available} available · ${s.sold} sold`;
+}
+
+// ── Cars List ──────────────────────────────────────────────────────────────────
+async function renderCarsList() {
+  const content = document.getElementById('mainContent');
+  content.innerHTML = '<div style="color:var(--text3); padding:40px; text-align:center;">Loading…</div>';
+
+  await loadCars();
+  await loadStats();
+
+  const stats = { total: cars.length, available: cars.filter(c=>!c.sold).length, sold: cars.filter(c=>c.sold).length, featured: cars.filter(c=>c.featured).length };
+
+  content.innerHTML = `
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-card-label">Total Cars</div><div class="stat-card-value">${stats.total}</div></div>
+      <div class="stat-card"><div class="stat-card-label">Available</div><div class="stat-card-value" style="color:var(--green)">${stats.available}</div></div>
+      <div class="stat-card"><div class="stat-card-label">Sold</div><div class="stat-card-value" style="color:var(--red)">${stats.sold}</div></div>
+      <div class="stat-card"><div class="stat-card-label">Featured</div><div class="stat-card-value" style="color:var(--orange)">${stats.featured}</div></div>
+    </div>
+
+    <div class="section-header">
+      <span class="section-title">All Cars</span>
+      <div class="gap-row">
+        <input class="search-small" type="text" placeholder="Search…" oninput="filterTable(this.value)">
+        <button class="btn btn-primary btn-sm" onclick="showSection('add')">+ Add Car</button>
+      </div>
+    </div>
+
+    <div class="car-table" id="carTable">
+      <div class="car-table-row car-table-header">
+        <div></div>
+        <div>Car</div>
+        <div>Price</div>
+        <div>Status</div>
+        <div>Actions</div>
+      </div>
+      ${cars.map(car => renderCarRow(car)).join('')}
+      ${cars.length === 0 ? '<div style="padding:40px; text-align:center; color:var(--text3);">No cars yet. Add your first car!</div>' : ''}
+    </div>`;
+}
+
+function renderCarRow(car) {
+  const primary = car.images?.find(i=>i.isPrimary) || car.images?.[0];
+  const thumb = primary
+    ? `<img class="table-thumb" src="${primary.url}" alt="${car.title}">`
+    : `<div class="table-thumb-placeholder"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"><path d="M5 17H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1l2-3h10l2 3h1a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-2"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="16.5" cy="17.5" r="2.5"/></svg></div>`;
+
+  const statusPill = car.sold
+    ? `<span class="pill pill-red">Sold</span>`
+    : `<span class="pill pill-green">Available</span>`;
+  const featuredPill = car.featured ? `<span class="pill pill-gold"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Featured</span>` : '';
+
+  return `
+    <div class="car-table-row" id="row-${car.id}">
+      ${thumb}
+      <div>
+        <div class="table-car-name">${car.title}</div>
+        <div class="table-car-meta">${car.year} · ${car.mileage?.toLocaleString() || 0} km · ${car.condition}</div>
+      </div>
+      <div class="table-price">${fmt(car.price)}</div>
+      <div class="gap-row" style="flex-wrap:wrap; gap:4px;">${statusPill} ${featuredPill}</div>
+      <div class="table-actions">
+        <button class="btn btn-ghost btn-sm" onclick="editCar(${car.id})"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="confirmDelete(${car.id})"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>
+      </div>
+    </div>`;
+}
+
+function filterTable(query) {
+  const rows = document.querySelectorAll('.car-table-row:not(.car-table-header)');
+  rows.forEach(row => {
+    row.style.display = row.textContent.toLowerCase().includes(query.toLowerCase()) ? '' : 'none';
+  });
+}
+
+// ── Edit Car ───────────────────────────────────────────────────────────────────
+async function editCar(id) {
+  const car = cars.find(c => c.id === id);
+  if (!car) return;
+  editingCar = car;
+  features = Array.isArray(car.features) ? [...car.features] : [];
+  renderCarForm(car);
+}
+
+// ── Car Form ───────────────────────────────────────────────────────────────────
+function renderCarForm(car) {
+  editingCar = car;
+  newImageFiles = [];
+  imagesToDelete = [];
+  if (!car) features = [];
+  const isEdit = !!car;
+  const content = document.getElementById('mainContent');
+
+  document.getElementById('pageTitle').textContent = isEdit ? `Edit: ${car.title}` : 'Add New Car';
+  document.getElementById('nav-add').classList.toggle('active', !isEdit);
+  if (isEdit) { document.querySelectorAll('.nav-item[id^="nav-"]').forEach(el=>el.classList.remove('active')); }
+
+  const fuelTypes = ['Petrol', 'Diesel', 'Electric', 'Hybrid', 'Plug-in Hybrid', 'LPG'];
+  const transmissions = ['Automatic', 'Manual', 'CVT', 'Semi-Automatic'];
+  const bodyTypes = ['Sedan', 'SUV', 'Hatchback', 'Coupe', 'Convertible', 'Wagon', 'Van', 'Pickup', 'Minivan', 'Crossover'];
+  const conditions = ['Used', 'New', 'Certified Pre-Owned'];
+
+  content.innerHTML = `
+    <div class="form-card">
+      <!-- Basic Info -->
+      <div class="form-section">
+        <div class="form-section-title">Basic Information</div>
+        <div class="form-row">
+          <div class="form-group" style="grid-column:1/-1;">
+            <label class="form-label">Listing Title *</label>
+            <input class="form-input" id="f-title" type="text" value="${e(car?.title)}" placeholder="e.g. 2021 Toyota Camry XSE — Loaded">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Make *</label>
+            <input class="form-input" id="f-make" type="text" value="${e(car?.make)}" placeholder="e.g. Toyota">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Model *</label>
+            <input class="form-input" id="f-model" type="text" value="${e(car?.model)}" placeholder="e.g. Camry">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Year *</label>
+            <input class="form-input" id="f-year" type="number" value="${car?.year || new Date().getFullYear()}" min="1950" max="2030">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Price (USD) *</label>
+            <input class="form-input" id="f-price" type="number" value="${car?.price || ''}" placeholder="25000" min="0">
+          </div>
+        </div>
+      </div>
+
+      <!-- Specs -->
+      <div class="form-section">
+        <div class="form-section-title">Vehicle Specifications</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Mileage (km)</label>
+            <input class="form-input" id="f-mileage" type="number" value="${car?.mileage || ''}" placeholder="45000" min="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Condition</label>
+            <select class="form-select" id="f-condition">
+              ${conditions.map(c => `<option value="${c}" ${car?.condition===c?'selected':''}>${c}</option>`).join('')}
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Fuel Type</label>
+            <select class="form-select" id="f-fuel">
+              ${fuelTypes.map(f => `<option value="${f}" ${car?.fuel_type===f?'selected':''}>${f}</option>`).join('')}
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Transmission</label>
+            <select class="form-select" id="f-transmission">
+              ${transmissions.map(t => `<option value="${t}" ${car?.transmission===t?'selected':''}>${t}</option>`).join('')}
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Body Type</label>
+            <select class="form-select" id="f-bodytype">
+              ${bodyTypes.map(b => `<option value="${b}" ${car?.body_type===b?'selected':''}>${b}</option>`).join('')}
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Color</label>
+            <input class="form-input" id="f-color" type="text" value="${e(car?.color)}" placeholder="e.g. Pearl White">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Engine</label>
+            <input class="form-input" id="f-engine" type="text" value="${e(car?.engine)}" placeholder="e.g. 2.5L 4-Cylinder">
+          </div>
+        </div>
+      </div>
+
+      <!-- Description & Features -->
+      <div class="form-section">
+        <div class="form-section-title">Description & Features</div>
+        <div class="form-row full" style="margin-bottom:20px;">
+          <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea class="form-textarea" id="f-description" placeholder="Describe the car's condition, history, and highlights…" style="min-height:120px;">${e(car?.description)}</textarea>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Features & Options</label>
+          <div class="features-input-area" id="featuresArea">${renderFeatureChips()}</div>
+          <div class="feature-add-row">
+            <input class="form-input" id="featureInput" type="text" placeholder="e.g. Sunroof, Leather Seats, Apple CarPlay…" style="flex:1;" onkeydown="if(event.key==='Enter'){event.preventDefault();addFeature();}">
+            <button class="btn btn-ghost btn-sm" onclick="addFeature()">+ Add</button>
+          </div>
+          <div style="margin-top:8px; font-size:12px; color:var(--text3);">Common: 
+            ${['Sunroof','Leather Seats','Bluetooth','Backup Camera','Apple CarPlay','Android Auto','Heated Seats','Navigation','Keyless Entry','Push Start'].map(f=>`<span style="cursor:pointer;color:var(--accent);" onclick="quickAddFeature('${f}')">${f}</span>`).join(' · ')}
+          </div>
+        </div>
+      </div>
+
+      <!-- Photos -->
+      <div class="form-section">
+        <div class="form-section-title">Photos</div>
+        ${isEdit && car.images?.length ? `
+          <div style="margin-bottom:16px;">
+            <div class="form-label" style="margin-bottom:8px;">Current Photos <span class="text-muted">(click actions to set primary or delete)</span></div>
+            <div class="image-preview-grid" id="existingImages">
+              ${car.images.map(img => `
+                <div class="image-preview-item${img.isPrimary?' primary':''}" id="eimg-${img.id}">
+                  <img src="${img.url}" alt="">
+                  ${img.isPrimary ? '<div class="primary-badge">Primary</div>' : ''}
+                  <div class="image-preview-actions">
+                    ${!img.isPrimary ? `<button class="img-action-btn" onclick="setPrimary(${img.id})" title="Set as primary"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>` : ''}
+                    <button class="img-action-btn" onclick="markDeleteImage(${img.id})" title="Delete" style="color:var(--red);"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>
+                  </div>
+                </div>`).join('')}
+            </div>
+          </div>` : ''}
+
+        <div class="form-label" style="margin-bottom:8px;">${isEdit ? 'Add More Photos' : 'Upload Photos'} <span class="text-muted">(up to 20, first is primary)</span></div>
+        <div class="image-upload-zone" id="uploadZone" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+          <input type="file" accept="image/*" multiple onchange="handleFileSelect(event)">
+          <div class="upload-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+          <div class="upload-text">Click to upload or drag and drop</div>
+          <div class="upload-sub">JPEG, PNG, WebP, HEIC · Up to 15MB each</div>
+        </div>
+        <div class="image-preview-grid" id="newImagePreviews" style="margin-top:12px;"></div>
+      </div>
+
+      <!-- Options -->
+      <div class="form-section">
+        <div class="form-section-title">Listing Options</div>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Feature this car</div>
+            <div class="toggle-desc">Featured cars appear first and with a special badge</div>
+          </div>
+          <button class="toggle${car?.featured?' on':''}" id="toggleFeatured" onclick="this.classList.toggle('on')"></button>
+        </div>
+        ${isEdit ? `
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-label"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;color:var(--green)"><polyline points="20 6 9 17 4 12"/></svg> Mark as Sold</div>
+              <div class="toggle-desc">Sold cars are shown with a sold badge and contact is disabled</div>
+            </div>
+            <button class="toggle${car?.sold?' on':''}" id="toggleSold" onclick="this.classList.toggle('on')"></button>
+          </div>` : ''}
+      </div>
+
+      <!-- Actions -->
+      <div class="form-actions">
+        ${isEdit ? `<button class="btn btn-danger" onclick="confirmDelete(${car.id})"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M9 6V4h6v2"/></svg> Delete Car</button>` : ''}
+        <button class="btn btn-ghost" onclick="showSection('cars')">Cancel</button>
+        <button class="btn btn-primary" id="saveBtn" onclick="saveCar()">
+          ${isEdit ? 'Save Changes' : 'Publish Car'}
+        </button>
+      </div>
+    </div>`;
+}
+
+function renderFeatureChips() {
+  return features.map((f, i) => `
+    <span class="feature-chip">
+      ${f}
+      <button onclick="removeFeature(${i})">×</button>
+    </span>`).join('');
+}
+
+function addFeature() {
+  const input = document.getElementById('featureInput');
+  const val = input.value.trim();
+  if (val && !features.includes(val)) {
+    features.push(val);
+    document.getElementById('featuresArea').innerHTML = renderFeatureChips();
+    input.value = '';
+  }
+}
+
+function quickAddFeature(f) {
+  if (!features.includes(f)) {
+    features.push(f);
+    document.getElementById('featuresArea').innerHTML = renderFeatureChips();
+  }
+}
+
+function removeFeature(i) {
+  features.splice(i, 1);
+  document.getElementById('featuresArea').innerHTML = renderFeatureChips();
+}
+
+// ── Image Handling ─────────────────────────────────────────────────────────────
+function handleFileSelect(e) { addFiles(Array.from(e.target.files)); }
+function handleDragOver(e) { e.preventDefault(); document.getElementById('uploadZone').classList.add('drag'); }
+function handleDragLeave(e) { document.getElementById('uploadZone').classList.remove('drag'); }
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('uploadZone').classList.remove('drag');
+  addFiles(Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/')));
+}
+
+function addFiles(files) {
+  newImageFiles.push(...files);
+  const preview = document.getElementById('newImagePreviews');
+  preview.innerHTML = '';
+  newImageFiles.forEach((file, i) => {
+    const url = URL.createObjectURL(file);
+    const item = document.createElement('div');
+    item.className = 'image-preview-item' + (i === 0 && !editingCar?.images?.length ? ' primary' : '');
+    item.innerHTML = `
+      <img src="${url}" alt="">
+      ${i === 0 && !editingCar?.images?.length ? '<div class="primary-badge">Primary</div>' : ''}
+      <div class="image-preview-actions">
+        <button class="img-action-btn" onclick="removeNewFile(${i})" title="Remove" style="color:var(--red);"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>`;
+    preview.appendChild(item);
+  });
+}
+
+function removeNewFile(i) {
+  newImageFiles.splice(i, 1);
+  addFiles([]); // re-render
+}
+
+function markDeleteImage(imgId) {
+  imagesToDelete.push(imgId);
+  const el = document.getElementById('eimg-' + imgId);
+  if (el) { el.style.opacity = '0.3'; el.style.outline = '2px solid var(--red)'; }
+  toast('Image marked for deletion. Save to confirm.', 'info');
+}
+
+function setPrimary(imgId) {
+  // Just note for UX — actual save handled on server
+  document.querySelectorAll('.image-preview-item').forEach(el => {
+    el.classList.remove('primary');
+    el.querySelector('.primary-badge')?.remove();
+  });
+  const el = document.getElementById('eimg-' + imgId);
+  if (el) {
+    el.classList.add('primary');
+    el.insertAdjacentHTML('afterbegin', '<div class="primary-badge">Primary</div>');
+    // Call API immediately
+    fetch(`/api/admin/cars/${editingCar.id}/primary-image/${imgId}`, { method: 'PATCH' });
+    toast('Primary image updated', 'success');
+  }
+}
+
+// ── Save Car ───────────────────────────────────────────────────────────────────
+async function saveCar() {
+  const btn = document.getElementById('saveBtn');
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
+
+  const title = document.getElementById('f-title').value.trim();
+  const make = document.getElementById('f-make').value.trim();
+  const model = document.getElementById('f-model').value.trim();
+  const year = document.getElementById('f-year').value;
+  const price = document.getElementById('f-price').value;
+
+  if (!title || !make || !model || !year || !price) {
+    toast('Please fill in all required fields', 'error');
+    btn.disabled = false;
+    btn.textContent = editingCar ? 'Save Changes' : 'Publish Car';
+    return;
+  }
+
+  const fd = new FormData();
+  fd.append('title', title);
+  fd.append('make', make);
+  fd.append('model', model);
+  fd.append('year', year);
+  fd.append('price', price);
+  fd.append('mileage', document.getElementById('f-mileage').value || 0);
+  fd.append('fuel_type', document.getElementById('f-fuel').value);
+  fd.append('transmission', document.getElementById('f-transmission').value);
+  fd.append('body_type', document.getElementById('f-bodytype').value);
+  fd.append('color', document.getElementById('f-color').value);
+  fd.append('condition', document.getElementById('f-condition').value);
+  fd.append('engine', document.getElementById('f-engine').value);
+  fd.append('description', document.getElementById('f-description').value);
+  fd.append('features', JSON.stringify(features));
+  fd.append('featured', document.getElementById('toggleFeatured').classList.contains('on') ? '1' : '0');
+  
+  const soldEl = document.getElementById('toggleSold');
+  if (soldEl) fd.append('sold', soldEl.classList.contains('on') ? '1' : '0');
+
+  if (imagesToDelete.length) fd.append('delete_images', JSON.stringify(imagesToDelete));
+  newImageFiles.forEach(f => fd.append('images', f));
+
+  try {
+    const url = editingCar ? `/api/admin/cars/${editingCar.id}` : '/api/admin/cars';
+    const method = editingCar ? 'PUT' : 'POST';
+    const res = await fetch(url, { method, body: fd });
+    if (!res.ok) throw new Error(await res.text());
+    toast(editingCar ? 'Car updated successfully!' : 'Car published successfully!', 'success');
+    setTimeout(() => showSection('cars'), 800);
+  } catch(e) {
+    toast('Error saving: ' + e.message, 'error');
+    btn.disabled = false;
+    btn.textContent = editingCar ? 'Save Changes' : 'Publish Car';
+  }
+}
+
+// ── Delete ─────────────────────────────────────────────────────────────────────
+function confirmDelete(id) {
+  confirmCallback = async () => {
+    await fetch(`/api/admin/cars/${id}`, { method: 'DELETE' });
+    toast('Car deleted', 'success');
+    closeConfirm();
+    showSection('cars');
+  };
+  document.getElementById('confirmOverlay').classList.add('open');
+  document.getElementById('confirmOkBtn').onclick = confirmCallback;
+}
+
+function closeConfirm() {
+  document.getElementById('confirmOverlay').classList.remove('open');
+}
+
+// ── Settings ───────────────────────────────────────────────────────────────────
+function renderSettings() {
+  const content = document.getElementById('mainContent');
+  content.innerHTML = `
+    <div class="form-card">
+      <div class="form-section">
+        <div class="form-section-title">Dealer Information</div>
+        <div class="settings-grid">
+          <div class="form-group">
+            <label class="form-label">Dealer Name</label>
+            <input class="form-input" id="s-name" value="${e(settings.dealer_name)}" placeholder="Tim's Car Deals">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Location</label>
+            <input class="form-input" id="s-location" value="${e(settings.dealer_location)}" placeholder="Cape Town, South Africa">
+          </div>
+          <div class="form-group" style="grid-column:1/-1;">
+            <label class="form-label">Tagline / Subtitle</label>
+            <input class="form-input" id="s-tagline" value="${e(settings.dealer_tagline)}" placeholder="Premium Pre-Owned Vehicles">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">WhatsApp Contact</div>
+        <div class="settings-grid">
+          <div class="form-group">
+            <label class="form-label">WhatsApp Number (with country code)</label>
+            <input class="form-input" id="s-wa-number" value="${e(settings.whatsapp_number)}" placeholder="27821234567">
+            <div class="text-muted" style="margin-top:4px;">Include country code, no + or spaces. e.g. 27821234567</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Default Message Prefix</label>
+            <input class="form-input" id="s-wa-message" value="${e(settings.whatsapp_message)}" placeholder="Hi! I'm interested in:">
+            <div class="text-muted" style="margin-top:4px;">Car details are automatically appended</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-primary" onclick="saveSettings()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Save Settings</button>
+      </div>
+    </div>`;
+}
+
+async function saveSettings() {
+  const body = {
+    dealer_name: document.getElementById('s-name').value,
+    dealer_location: document.getElementById('s-location').value,
+    dealer_tagline: document.getElementById('s-tagline').value,
+    whatsapp_number: document.getElementById('s-wa-number').value.replace(/\D/g,''),
+    whatsapp_message: document.getElementById('s-wa-message').value,
+  };
+
+  const res = await fetch('/api/admin/settings', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  if (res.ok) {
+    settings = await res.json();
+    toast('Settings saved!', 'success');
+  } else {
+    toast('Error saving settings', 'error');
+  }
+}
+
+// ── Toast ──────────────────────────────────────────────────────────────────────
+function toast(msg, type = 'info') {
+  const container = document.getElementById('toasts');
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  const icons = { success: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>', error: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>', info: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>' };
+  el.innerHTML = `<span>${icons[type]||'ℹ'}</span> ${msg}`;
+  container.appendChild(el);
+  setTimeout(() => el.remove(), 3500);
+}
+
+// ── Utils ──────────────────────────────────────────────────────────────────────
+function fmt(p) {
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(p || 0);
+}
+
+function e(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Start ──────────────────────────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>

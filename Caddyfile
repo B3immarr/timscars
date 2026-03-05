@@ -1,0 +1,55 @@
+# Caddyfile — Tim's Car Deals
+# Replace domains with your actual domains.
+# Caddy auto-provisions free HTTPS certificates via Let's Encrypt.
+
+# ── Main storefront ──────────────────────────────────────────────────
+cars.yourdomain.com {
+    reverse_proxy localhost:3000
+
+    # Compress responses
+    encode gzip zstd
+
+    # Cache static assets aggressively
+    @static {
+        path *.css *.js *.png *.jpg *.jpeg *.webp *.ico *.woff2 *.woff
+    }
+    header @static Cache-Control "public, max-age=31536000, immutable"
+
+    # Security headers
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        X-Content-Type-Options nosniff
+        X-Frame-Options DENY
+        Referrer-Policy no-referrer-when-downgrade
+        -Server
+    }
+
+    # Logs
+    log {
+        output file /var/log/caddy/tims-cars-access.log
+        format json
+    }
+}
+
+# ── Admin panel (same app, different subdomain, optional) ─────────────
+# If you want the admin on its own subdomain for clarity:
+#
+# admin.cars.yourdomain.com {
+#     reverse_proxy localhost:3000
+#
+#     # Optional: restrict admin to specific IPs
+#     # @blocked not remote_ip 1.2.3.4/32
+#     # respond @blocked "Forbidden" 403
+#
+#     encode gzip zstd
+#
+#     header {
+#         Strict-Transport-Security "max-age=31536000"
+#         X-Content-Type-Options nosniff
+#         -Server
+#     }
+# }
+
+# ── Alternative: both on same domain (no subdomain split needed) ──────
+# The admin is already accessible at /admin on the main domain.
+# No extra Caddy config needed for that — it's handled by the app.

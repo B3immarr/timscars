@@ -1,0 +1,31 @@
+version: '3.9'
+
+services:
+  app:
+    build: .
+    container_name: tims-car-deals
+    restart: unless-stopped
+    environment:
+      - PORT=3000
+      # CHANGE THESE in production!
+      - ADMIN_PASSWORD=changeme_strong_password
+      - SESSION_SECRET=changeme_very_long_random_secret_string_here
+    volumes:
+      # Persist uploads and database outside the container
+      - ./data/uploads:/app/uploads
+      - ./data/db:/app/db
+    ports:
+      - "127.0.0.1:3000:3000"  # Only expose to localhost (Caddy handles external)
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/settings"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    networks:
+      - caddy_net
+
+networks:
+  caddy_net:
+    external: true  # Shared with Caddy container if using Caddy in Docker
+    # If Caddy is installed natively on the host, remove this and use ports above
