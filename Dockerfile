@@ -10,7 +10,7 @@ COPY package*.json ./
 
 # Install dependencies
 RUN npm ci --only=production
-
+RUN npm rebuild better-sqlite3
 # Copy application files
 COPY . .
 
